@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:movie_app/common/utils.dart';
 import 'package:movie_app/models/movie_detail_model.dart';
@@ -87,5 +86,23 @@ class ApiServices {
       return Result.fromJson(jsonDecode(response.body));
     }
     throw Exception('failed to load now playing movies');
+  }
+
+  // Implementação do método getGenres para buscar os gêneros de filmes
+  Future<List<String>> getGenres() async {
+    final endPoint = 'genre/movie/list';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List<dynamic> genresList = data['genres'];
+
+      // Retorna uma lista de strings com os nomes dos gêneros
+      List<String> genres = genresList.map((genre) => genre['name'].toString()).toList();
+      return genres;
+    } else {
+      throw Exception('Failed to load genres');
+    }
   }
 }

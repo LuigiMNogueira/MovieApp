@@ -4,7 +4,13 @@ import 'package:movie_app/pages/home/widgets/movie_horizontal_item.dart';
 
 class MoviesHorizontalList extends StatelessWidget {
   final Result result;
-  const MoviesHorizontalList({super.key, required this.result});
+  final Function(int movieId) onMovieTap; // Adiciona o callback onMovieTap
+
+  const MoviesHorizontalList({
+    super.key,
+    required this.result,
+    required this.onMovieTap, // Certifica-se de que o callback é obrigatório
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,13 @@ class MoviesHorizontalList extends StatelessWidget {
         itemCount: result.movies.length,
         itemBuilder: (context, index) {
           final movie = result.movies[index];
-          return MovieHorizontalItem(movie: movie);
+
+          return GestureDetector(
+            onTap: () {
+              onMovieTap(movie.id); // Chama o callback onMovieTap ao clicar no filme
+            },
+            child: MovieHorizontalItem(movie: movie),
+          );
         },
       ),
     );

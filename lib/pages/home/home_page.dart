@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/models/movie_model.dart';
 import 'package:movie_app/pages/home/widgets/movies_horizontal_list.dart';
 import 'package:movie_app/pages/home/widgets/nowplaying_list.dart';
+import 'package:movie_app/pages/movie_detail/movie_detail_page.dart'; // Novo caminho para MovieDetailPage
 import 'package:movie_app/services/api_services.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,6 +25,16 @@ class _HomePageState extends State<HomePage> {
     nowPlaying = apiServices.getNowPlayingMovies();
     upcomingFuture = apiServices.getUpcomingMovies();
     super.initState();
+  }
+
+  // Função para navegar para a página de detalhes do filme
+  void navigateToDetailPage(int movieId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MovieDetailPage(movieId: movieId),
+      ),
+    );
   }
 
   @override
@@ -52,7 +63,12 @@ class _HomePageState extends State<HomePage> {
                 future: nowPlaying,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return NowPlayingList(result: snapshot.data!);
+                    return NowPlayingList(
+                      result: snapshot.data!,
+                      onMovieTap: (movieId) {
+                        navigateToDetailPage(movieId); // Navegação para a página de detalhes
+                      },
+                    );
                   }
                   return const SizedBox();
                 },
@@ -75,7 +91,12 @@ class _HomePageState extends State<HomePage> {
                 future: popular,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return MoviesHorizontalList(result: snapshot.data!);
+                    return MoviesHorizontalList(
+                      result: snapshot.data!,
+                      onMovieTap: (movieId) {
+                        navigateToDetailPage(movieId); // Navegação para a página de detalhes
+                      },
+                    );
                   }
                   return const SizedBox();
                 },
@@ -95,7 +116,12 @@ class _HomePageState extends State<HomePage> {
                 future: upcomingFuture,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return MoviesHorizontalList(result: snapshot.data!);
+                    return MoviesHorizontalList(
+                      result: snapshot.data!,
+                      onMovieTap: (movieId) {
+                        navigateToDetailPage(movieId); // Navegação para a página de detalhes
+                      },
+                    );
                   }
                   return const SizedBox();
                 },

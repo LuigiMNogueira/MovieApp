@@ -18,6 +18,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   late Future<MovieDetailModel> movieDetail;
   late Future<Result> movieRecommendationModel;
+  
+  // State to track whether the movie is a favorite
+  bool isFavorite = false;
 
   @override
   void initState() {
@@ -32,10 +35,18 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     setState(() {});
   }
 
+  // Toggle favorite status
+  void toggleFavorite() {
+    setState(() {
+      isFavorite = !isFavorite;
+    });
+    // Save the favorite status locally (this is a placeholder)
+    // You can add logic here to store the favorite status in a database or shared preferences.
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    print(widget.movieId);
     return Scaffold(
       body: SingleChildScrollView(
         child: FutureBuilder(
@@ -69,6 +80,15 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: isFavorite ? Colors.red : Colors.white,
+                                ),
+                                onPressed: toggleFavorite,
                               )
                             ],
                           ),

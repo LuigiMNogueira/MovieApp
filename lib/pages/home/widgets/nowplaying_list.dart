@@ -4,7 +4,13 @@ import 'package:movie_app/widgets/custom_card_thumbnail.dart';
 
 class NowPlayingList extends StatefulWidget {
   final Result result;
-  const NowPlayingList({super.key, required this.result});
+  final Function(int movieId) onMovieTap; // Adiciona o callback onMovieTap
+
+  const NowPlayingList({
+    super.key,
+    required this.result,
+    required this.onMovieTap, // Certifica-se de que o callback é obrigatório
+  });
 
   @override
   State<NowPlayingList> createState() => _NowPlayingListState();
@@ -12,7 +18,6 @@ class NowPlayingList extends StatefulWidget {
 
 class _NowPlayingListState extends State<NowPlayingList> {
   final PageController _pageController = PageController(viewportFraction: 0.9);
-
   int currentPage = 1;
   final maxItems = 5;
 
@@ -29,9 +34,16 @@ class _NowPlayingListState extends State<NowPlayingList> {
             controller: _pageController,
             itemCount: totalItems > maxItems ? maxItems : totalItems,
             itemBuilder: (context, index) {
-              final imgUrl = widget.result.movies[index].posterPath;
-              return CustomCardThumbnail(
-                imageAsset: imgUrl,
+              final movie = widget.result.movies[index];
+              final imgUrl = movie.posterPath;
+
+              return GestureDetector(
+                onTap: () {
+                  widget.onMovieTap(movie.id); // Chama o callback onMovieTap ao clicar no filme
+                },
+                child: CustomCardThumbnail(
+                  imageAsset: imgUrl,
+                ),
               );
             },
             onPageChanged: (int page) {
